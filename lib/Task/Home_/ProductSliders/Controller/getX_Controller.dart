@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
-import 'package:pro1/Task/Home_/ProductSliders/Model/Product_model.dart';
-import 'package:pro1/Task/Home_/ProductSliders/Services/ProductServices.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Model/Product_model.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Services/ProductServices.dart';
 
 class ProductController extends GetxController{
   List<Product> ProductItems=[];

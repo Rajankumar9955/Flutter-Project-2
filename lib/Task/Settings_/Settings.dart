@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pro1/Task/Check-Out/Personal_Information.dart';
+import 'package:pro2/Task/Check-Out/Personal_Information.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pro1/data/session_manager.dart';
+import 'package:pro2/data/session_manager.dart';
 import 'package:get/get.dart';
 
 class Settings extends StatefulWidget {

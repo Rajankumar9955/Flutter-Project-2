@@ -1,4 +1,4 @@
-import 'package:pro1/Task/LoginSection/Login_Page.dart';
+import 'package:pro2/Task/LoginSection/Login_Page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +20,7 @@ static dynamic  getToken(){
 
    static logOut()async{
            SharedPreferences? prefs=await _prefs;
-                prefs?.clear();
+                prefs.clear();
                 Get.offAll(LoginPage());
    }
 }

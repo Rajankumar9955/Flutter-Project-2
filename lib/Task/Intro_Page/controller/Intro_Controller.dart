@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pro1/Task/LoginSection/Login_Page.dart';
+import 'package:pro2/Task/LoginSection/Login_Page.dart';
 
 class IntroController extends GetxController {
   var currentPage = 0.obs;

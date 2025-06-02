@@ -8,7 +8,10 @@ import 'package:pro2/Task/Home_/ProductSliders/HomeProductSlider_page.dart';
 import 'package:pro2/Task/Models/Categories.dart';
 import 'package:pro2/Task/Models/PromoBanner_Model.dart';
 import 'package:get/get.dart';
+
 import 'package:pro2/core/constants/api_network.dart';
+
+
 
 class HomeContent_page extends StatefulWidget {
   const HomeContent_page({super.key});

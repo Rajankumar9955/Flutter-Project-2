@@ -4,7 +4,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:pro1/Task/Home_/ProductSliders/Model/Product_model.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Model/Product_model.dart';
 
 
 class RemoteServices{

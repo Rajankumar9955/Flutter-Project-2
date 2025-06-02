@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:pro1/Task/LoginSection/Controller/Signup_controller.dart';
-import 'package:pro1/Task/LoginSection/Login_Page.dart';
-import 'package:pro1/Task/LoginSection/services/auth_services.dart';
-import 'package:pro1/Task/Intro_Page/Task.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro2/Task/LoginSection/Controller/Signup_controller.dart';
+import 'package:pro2/Task/LoginSection/Login_Bloc/login_bloc.dart';
+import 'package:pro2/Task/LoginSection/Login_Page.dart';
+import 'package:pro2/Task/LoginSection/services/auth_services.dart';
+import 'package:pro2/Task/Intro_Page/Task.dart';
 import 'package:get/get.dart';
 
 class CreateUserPage extends StatefulWidget {
@@ -14,10 +16,21 @@ class CreateUserPage extends StatefulWidget {
 }
 
 class _CreateUserPageState extends State<CreateUserPage> {
-RegisterationController registerationController=Get.put(RegisterationController());
-bool _isObscure=false;
-bool _Obscure=false;
+  // RegisterationController registerationController=Get.put(RegisterationController());
 
+  SignUpBloc signupBloc = SignUpBloc();
+
+  bool _isObscure = false;
+  bool _Obscure = false;
+
+  final TextEditingController userController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPassController = TextEditingController();
+
+   bool selected=false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,223 +38,267 @@ bool _Obscure=false;
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 16, width: 18),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+            child: BlocConsumer<SignUpBloc, SignUpState>(
+              listener: (context, state) {
+                // TODO: implement listener
+                   if(state is SignUpError){
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Center(child: Text(state.message),)));
+                   }
+                   if(state is SignUpSucessState){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                   }
+              },
+              bloc: signupBloc,
+              builder: (context, state) {
+                return Column(
                   children: [
-                    Text(
-                      "Create an\naccount",
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.black,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: registerationController.userController,
-                      decoration: InputDecoration(
-                        hintText: "Username",
-                        prefixIcon: Icon(Icons.verified_user),
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (String value) {},
-                      validator: (value) {
-                        return value!.isEmpty ? 'Please Enter Username' : null;
-                      },
-                    ),
-                    SizedBox(height: 5),
-                    TextFormField(
-                      controller: registerationController.emailController,
-                      decoration: InputDecoration(
-                        hintText: "Email",
-                        prefixIcon: Icon(Icons.email),
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (String value) {},
-                      validator: (value) {
-                        return value!.isEmpty ? 'Please Enter Email' : null;
-                      },
-                    ),
-                    SizedBox(height: 5),
-                    TextFormField(
-                      controller: registerationController.mobileController,
-                      decoration: InputDecoration(
-                        hintText: "Mobile Number",
-                        prefixIcon: Icon(Icons.phone),
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (String value) {},
-                      validator: (value) {
-                        return value!.isEmpty
-                            ? 'Please Enter Mobile Number'
-                            : null;
-                      },
-                    ),
-                    SizedBox(height: 5),
-                    TextFormField(
-                      controller: registerationController.dobController,
-                      decoration: InputDecoration(
-                        hintText: "DOB",
-                        prefixIcon: Icon(Icons.calendar_today),
-                        border: OutlineInputBorder(),
-                      ),
-                      readOnly: true,
-                      onTap: () {
-                        _selectDate(context);
-                      },
-                    ),
-
-                  SizedBox(height: 5),
-
-                    TextFormField(
-                      obscureText: _isObscure,
-                      controller: registerationController.passwordController,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(onPressed: (){
-                               setState(() {
-                                 _isObscure=!_isObscure;
-                               });
-                        }, icon: Icon(_isObscure?Icons.visibility:Icons.visibility_off)),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 5,),
-                    TextFormField(
-                      obscureText: _Obscure,
-                      controller: registerationController.confirmPassController,
-                      decoration: InputDecoration(
-                        hintText: "Confirm Password",
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(onPressed: (){
-                                setState(() {
-                                  _Obscure=!_Obscure;
-                                });
-                        }, icon: Icon(_Obscure?Icons.visibility:Icons.visibility_off)),
-
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    //  SizedBox(height: 34,),
-
-                    //       SizedBox(height: 8,),
-                    Row(
-                      children: [
-                        Container(
-                          child: Checkbox(
-                            value: registerationController.selected,
-                            onChanged: (value) {
-                              setState(() {
-                                registerationController.selected = value!;
-                              });
-                            },
-                          ),
-                        ),
-                        Text("Please check the Box"),
-                      ],
-                    ),
+                    SizedBox(height: 16, width: 18),
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "By clicking the Register button, you agree to the public offer",
+                          "Create an\naccount",
                           style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 15,
+                            fontSize: 30,
+                            color: Colors.black,
+                            fontFamily: "Montserrat",
                             fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        SizedBox(height: 15),
+                        TextFormField(
+                          controller: userController,
+                          decoration: InputDecoration(
+                            hintText: "Username",
+                            prefixIcon: Icon(Icons.verified_user),
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (String value) {},
+                          validator: (value) {
+                            return value!.isEmpty
+                                ? 'Please Enter Username'
+                                : null;
+                          },
+                        ),
+                        SizedBox(height: 5),
+                        TextFormField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            prefixIcon: Icon(Icons.email),
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (String value) {},
+                          validator: (value) {
+                            return value!.isEmpty ? 'Please Enter Email' : null;
+                          },
+                        ),
+                        SizedBox(height: 5),
+                        TextFormField(
+                          controller: mobileController,
+                          decoration: InputDecoration(
+                            hintText: "Mobile Number",
+                            prefixIcon: Icon(Icons.phone),
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (String value) {},
+                          validator: (value) {
+                            return value!.isEmpty
+                                ? 'Please Enter Mobile Number'
+                                : null;
+                          },
+                        ),
+                        SizedBox(height: 5),
+                        TextFormField(
+                          controller: dobController,
+                          decoration: InputDecoration(
+                            hintText: "DOB",
+                            prefixIcon: Icon(Icons.calendar_today),
+                            border: OutlineInputBorder(),
+                          ),
+                          readOnly: true,
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                        ),
+
+                        SizedBox(height: 5),
+
+                        TextFormField(
+                          obscureText: _isObscure,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                              icon: Icon(
+                                _isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        TextFormField(
+                          obscureText: _Obscure,
+                          controller: confirmPassController,
+                          decoration: InputDecoration(
+                            hintText: "Confirm Password",
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _Obscure = !_Obscure;
+                                });
+                              },
+                              icon: Icon(
+                                _Obscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
+
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        //  SizedBox(height: 34,),
+
+                        //       SizedBox(height: 8,),
+                        Row(
+                          children: [
+                            Container(
+                              child: Checkbox(
+                                value:selected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selected = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                            Text("Please check the Box"),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "By clicking the Register button, you agree to the public offer",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 35),
+                        // ////////////////////////////////////////////
+                     state is SignUpSucessState ? Center(child: CircularProgressIndicator(),)
+                        : MaterialButton(
+                            onPressed: () async {
+                             signupBloc.add(
+                                  SignUpActionEvent(
+                                   userController.text,
+                                   emailController.text,
+                                   mobileController.text,
+                                   dobController.text,
+                                   passwordController.text,
+                                   confirmPassController.text,
+                                   
+                                  ),
+                                );
+                            },
+                            minWidth: double.infinity,
+                            child:
+                                 state is SignUpLoadingState
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                      "Create Account",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: "Montserrat",
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            color: Colors.red,
+                            height: 50,
+                            textColor: Colors.white,
+                          ),
+                       
+                      ],
+                    ),
+
+                    // //////////////////////////////////////////////
+                    SizedBox(height: 25),
+                    Column(
+                      children: [
+                        Text(
+                          "- OR Continue With -",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: "Montserrat",
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomLogoWidget(
+                          logo: "assets/googleImage.jpeg",
+                          onTap: () {},
+                        ),
+                        CustomLogoWidget(
+                          logo: "assets/applelogo.jpeg",
+                          onTap: () {},
+                        ),
+                        CustomLogoWidget(
+                          logo: "assets/facebook.jpeg",
+                          onTap: () {},
                         ),
                       ],
                     ),
                     SizedBox(height: 35),
-                    // ////////////////////////////////////////////
-                   Obx((){
-                    return  MaterialButton(
-                      onPressed: () async {
-                            registerationController.UserRegistration(context);
-                      },
-                      minWidth: double.infinity,
-                      child: registerationController.loading.value?CircularProgressIndicator():Text(
-                        "Create Account",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: "Montserrat",
-                          fontWeight: FontWeight.bold,
+                    Column(
+                      children: [
+                        InkWell(
+                          child: Text(
+                            "I Already have an Account : Login",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                      color: Colors.red,
-                      height: 50,
-                      textColor: Colors.white,
-                    );
-                   })
-                  ],
-                ),
-
-// //////////////////////////////////////////////
-
-                SizedBox(height: 25),
-                Column(
-                  children: [
-                    Text(
-                      "- OR Continue With -",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                      ],
                     ),
                   ],
-                ),
-                SizedBox(height: 20),
-
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomLogoWidget(
-                      logo: "assets/googleImage.jpeg",
-                      onTap: () {},
-                    ),
-                    CustomLogoWidget(
-                      logo: "assets/applelogo.jpeg",
-                      onTap: () {},
-                    ),
-                   CustomLogoWidget(logo: "assets/facebook.jpeg", onTap: () {
-                     
-                   },),
-                  ],
-                ),
-                SizedBox(height: 35),
-                Column(
-                  children: [
-                    InkWell(
-                      child: Text(
-                        "I Already have an Account : Login",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: "Montserrat",
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),
@@ -259,7 +316,8 @@ bool _Obscure=false;
       lastDate: DateTime(2100),
     );
     if (_picked != null) {
-      registerationController.dobController.text = _picked.toString().split(" ")[0];
+      dobController.text =
+          _picked.toString().split(" ")[0];
     }
   }
 }

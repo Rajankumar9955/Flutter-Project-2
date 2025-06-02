@@ -1,15 +1,12 @@
 // import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pro1/Task/Home_/Home_page.dart';
-// import 'package:pro1/Task/LoginSection/Controller/Login_Controller.dart';
-import 'package:pro1/Task/LoginSection/ForgetPass_Page.dart';
-import 'package:pro1/Task/LoginSection/CreateUser_page.dart';
-// import 'package:pro1/Task/GetStarted/GetStarted_page.dart';
-import 'package:pro1/Task/LoginSection/Login_Bloc/login_bloc.dart';
-// import 'package:pro1/Task/LoginSection/services/auth_services.dart';
-// import 'package:pro1/Task/Intro_Page/Task.dart';
-// import 'package:get/get.dart';
+import 'package:pro2/Task/Home_/Home_page.dart';
+import 'package:pro2/Task/LoginSection/ForgetPass_Page.dart';
+import 'package:pro2/Task/LoginSection/CreateUser_page.dart';
+
+import 'package:pro2/Task/LoginSection/Login_Bloc/login_bloc.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,10 +18,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   LoginBloc loginBloc = LoginBloc();
-  //  LoginController loginController=Get.put(LoginController());
-  bool _isObscure = true;
 
-  // var isLogin=false.obs;
+  bool _isObscure = true;
 
   final TextEditingController userController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -139,25 +134,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: 25),
 
-                        // Obx((){
-                        //  return MaterialButton(
-                        //   onPressed: () async {
-                        //     loginController.userLogin(context);
-                        //    },
-                        //   minWidth: double.infinity,
-                        //   child: loginController.loading.value?CircularProgressIndicator():Text(
-                        //     "Login",
-                        //     style: TextStyle(
-                        //       fontSize: 15,
-                        //       fontFamily: "Montserrat",
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        //   color: Colors.red,
-                        //   height: 50,
-                        //   textColor: Colors.white,
-                        // );
-                        // })
                         state is LoginLoadingState
                             ? Center(child: CircularProgressIndicator())
                             : MaterialButton(

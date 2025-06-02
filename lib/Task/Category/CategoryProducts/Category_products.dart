@@ -568,7 +568,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
 
               // Filter products by category ID
               List<Product> data = productController.ProductItems
-                  .where((product) => product.categoryId == widget.ID)
+                  // .where((product) => product.categoryId == widget.ID)
                   .toList();
 
               return Column(

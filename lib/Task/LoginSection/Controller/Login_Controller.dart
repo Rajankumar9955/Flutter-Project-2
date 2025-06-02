@@ -2,16 +2,14 @@
 import 'package:get/get.dart';
  import 'package:flutter/material.dart';
  import 'package:http/http.dart' as http;
-import 'package:pro1/Task/Home_/Home_content/HomeContent_page.dart';
-import 'package:pro1/Task/Home_/Home_page.dart';
-import 'package:pro1/Task/LoginSection/CreateUser_page.dart';
-import 'package:pro1/Task/LoginSection/Login_Page.dart';
-import 'package:pro1/data/session_manager.dart';
+import 'package:pro2/Task/Home_/Home_content/HomeContent_page.dart';
+import 'package:pro2/Task/Home_/Home_page.dart';
+import 'package:pro2/Task/LoginSection/CreateUser_page.dart';
+import 'package:pro2/Task/LoginSection/Login_Page.dart';
+import 'package:pro2/data/session_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController{
-
-
 
   TextEditingController emailController = TextEditingController();
 

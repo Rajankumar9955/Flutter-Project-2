@@ -97,7 +97,7 @@ Widget build(BuildContext context) {
 Widget buildProductCard(product) {
   return InkWell(
     onTap: (){
-      Get.to(ProductDetailPage(product: product));
+      // Get.to(ProductDetailPage(product: product));
     },
     child: Container(
       margin: EdgeInsets.symmetric(vertical: 10),

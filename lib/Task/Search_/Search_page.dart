@@ -2,9 +2,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pro1/Task/Home_/ProductSliders/Controller/getX_Controller.dart';
-import 'package:pro1/Task/Home_/ProductSliders/Model/Product_model.dart';
-import 'package:pro1/Task/Pages/ProDetails_page.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Controller/getX_Controller.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Model/Product_model.dart';
+import 'package:pro2/Task/Pages/ProDetails_page.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:get/get.dart';
 

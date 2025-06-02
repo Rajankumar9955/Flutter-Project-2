@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pro1/Task/Invoice_pdf/product_Invoice.dart';
-import 'package:pro1/Task/LoginSection/CreateUser_page.dart';
-import 'package:pro1/data/session_manager.dart';
+import 'package:pro2/Task/Invoice_pdf/product_Invoice.dart';
+import 'package:pro2/Task/LoginSection/CreateUser_page.dart';
+import 'package:pro2/data/session_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get/get.dart';
+
 
 class NavbarSlider extends StatelessWidget {
    NavbarSlider({super.key});

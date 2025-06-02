@@ -3,16 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:pro1/Task/Category/Model/Cotegories_Model.dart';
-import 'package:pro1/Task/Home_/ProductSliders/Controller/getX_Controller.dart';
-import 'package:pro1/Task/Models/Categories.dart';
-import 'package:pro1/Task/Pages/ProDetails_page.dart';
-import 'package:pro1/Task/WishList_/Controller/Wishlist_Controller.dart';
-import 'package:pro1/core/constants/api_network.dart';
+import 'package:pro2/Task/Category/Model/Cotegories_Model.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Controller/getX_Controller.dart';
+import 'package:pro2/Task/Models/Categories.dart';
+import 'package:pro2/Task/Pages/ProDetails_page.dart';
+import 'package:pro2/Task/WishList_/Controller/Wishlist_Controller.dart';
+import 'package:pro2/core/constants/api_network.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import 'package:pro1/Task/Category/CategoryProducts/Category_products.dart';
-import 'package:pro1/Task/Category/Controller/Categories_controller.dart';
+import 'package:pro2/Task/Category/CategoryProducts/Category_products.dart';
+import 'package:pro2/Task/Category/Controller/Categories_controller.dart';
 
 class WishList extends StatefulWidget {
   const WishList({super.key});

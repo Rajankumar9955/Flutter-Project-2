@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pro2/Getx/Views/product_screen.dart';
+// import 'package:pro2/Getx/Views/product_screen.dart';
 import 'package:pro2/Task/Home_/Home_page.dart';
 import 'package:pro2/Task/LoginSection/Login_Bloc/login_bloc.dart';
 import 'package:pro2/Task/Pages/NavbarSlider_page.dart';
@@ -10,7 +10,11 @@ import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SessionManager().init();
+  try {
+    await SessionManager().init();
+  } catch (e, stack) {
+    print('SessionManager.init() failed: $e\n$stack');
+  }
   runApp(const MyApp());
 }
 
