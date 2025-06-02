@@ -214,7 +214,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                    dobController.text,
                                    passwordController.text,
                                    confirmPassController.text,
-                                   
+                                   selected,
                                   ),
                                 );
                             },

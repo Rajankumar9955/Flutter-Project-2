@@ -68,7 +68,7 @@ FutureOr<void> getSignUp(SignUpActionEvent event, Emitter<SignUpState> emit) asy
         "email": event.email,
         "mobile_number": event.mobile,
         "dob": event.dob,
-        "terms": selected.toString(),
+        "terms": event.selected.toString(),
         "password": event.password,
         "password_confirmation": event.confirmPass,
     };
