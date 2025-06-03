@@ -414,10 +414,13 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_bloc.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_state.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:pro2/Task/Home_/ProductSliders/Controller/getX_Controller.dart';
+
 import 'package:pro2/Task/Home_/ProductSliders/Model/Product_model.dart';
 import 'package:pro2/Task/Pages/ProDetails_page.dart';
 
@@ -430,7 +433,7 @@ class CategoryProducts extends StatefulWidget {
 }
 
 class _CategoryProductsState extends State<CategoryProducts> {
-  final ProductController productController = Get.put(ProductController());
+final ProductsBloc _productsBloc= ProductsBloc();
   late Razorpay _razorpay;
 
   final String razorPayKey = "rzp_test_xH8lHTk2JMtS8k";
@@ -561,17 +564,34 @@ class _CategoryProductsState extends State<CategoryProducts> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
           child: SingleChildScrollView(
-            child: Obx(() {
-              if (productController.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
-              }
+            child: 
+            
+            
+            BlocProvider( 
+              create:(context)=>_productsBloc,
+              child: BlocBuilder(builder: (context, state){
+                if(state is ProductError){
+                  return Center(
+                    child: Text(state.error!),
+                  );
+                }
+                else if(state is ProductInitial){
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                else if(state is ProductLoading){
+                  return Center(
+                      child: CircularProgressIndicator(),
+                  );
+                }else if(state is ProductLoaded){
 
-              // Filter products by category ID
-              List<Product> data = productController.ProductItems
-                  // .where((product) => product.categoryId == widget.ID)
-                  .toList();
+                  // Filter products by category ID
+              List<Product> data = state.ProductList
+              .where((product) => product.categoryId == widget.ID)
+              .toList();
 
-              return Column(
+              return  Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Search
@@ -766,11 +786,27 @@ class _CategoryProductsState extends State<CategoryProducts> {
                     },
                   ),
                 ],
-              );
-            }),
+              ); 
+                }
+
+                return Container();
+                
+              }),
+
+             
+            
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
+
+
+
+/**
+  
+ */

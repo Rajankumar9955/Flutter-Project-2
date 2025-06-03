@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:pro2/Task/Home_/DealOfTheDay/model/DealOfTheDay_model.dart';
-import 'package:pro2/Task/Home_/ProductSliders/Services/ProductServices.dart';
+
 
 class Dealcontroller extends GetxController{
   List<DealModel> ProductItems=[];

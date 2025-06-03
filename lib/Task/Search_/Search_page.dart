@@ -1,8 +1,10 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:pro2/Task/Home_/ProductSliders/Controller/getX_Controller.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_bloc.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_state.dart';
 import 'package:pro2/Task/Home_/ProductSliders/Model/Product_model.dart';
 import 'package:pro2/Task/Pages/ProDetails_page.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -16,7 +18,9 @@ class Search_page extends StatefulWidget {
 }
 
 class _Search_pageState extends State<Search_page> {
-  final ProductController productController = Get.put(ProductController());
+ 
+ final ProductsBloc _productsBloc=ProductsBloc();
+
   TextEditingController searchController = TextEditingController();
 
   final String razorPayKey = "rzp_test_xH8lHTk2JMtS8k";
@@ -153,27 +157,27 @@ Widget build(BuildContext context) {
                 children: [
                   Icon(Icons.search, color: Colors.grey),
                   SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: searchController,
-                      onChanged: (value) {
-                        setState(() {
-                          search.clear();
-                          for (var e in productController.ProductItems) {
-                          if (e.productName != null &&
-                              e.productName!.toLowerCase().contains(value.toLowerCase().trim())) {
-                            search.add(e);
-                          }
-                        }
-                          _sortProductList(search);
-                        });
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Search any Product..",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: TextField(
+                  //     controller: searchController,
+                  //     onChanged: (value) {
+                  //       setState(() {
+                  //         search.clear();
+                  //         for (var e in state.ProductList) {
+                  //         if (e.productName != null &&
+                  //             e.productName!.toLowerCase().contains(value.toLowerCase().trim())) {
+                  //           search.add(e);
+                  //         }
+                  //       }
+                  //         _sortProductList(search);
+                  //       });
+                  //     },
+                  //     decoration: InputDecoration(
+                  //       hintText: "Search any Product..",
+                  //       border: InputBorder.none,
+                  //     ),
+                  //   ),
+                  // ),
                   Icon(Icons.mic, color: Colors.grey),
                 ],
               ),
@@ -198,7 +202,7 @@ Widget build(BuildContext context) {
                           if (searchController.text != "") {
                             _sortProductList(search);
                           } else {
-                            _sortProductList(productController.ProductItems);
+                            // _sortProductList(State.ProductList);
                           }
                         });
                       },
@@ -218,13 +222,23 @@ Widget build(BuildContext context) {
 
             // Scrollable Grid
             Expanded(
-              child: Obx(() {
-                if (productController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  List<Product> displayList = searchController.text != ""
+              child: 
+              BlocProvider(
+                create: (context) => _productsBloc,
+                child: BlocBuilder(builder: (context, state){
+                  if(state is ProductInitial){
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }else if(state is ProductLoading){
+                    return Center(
+                       child: CircularProgressIndicator(),
+                    );
+                  }else if(state is ProductLoaded){
+                       
+                       List<Product> displayList = searchController.text != ""
                       ? List.from(search)
-                      : List.from(productController.ProductItems);
+                      : List.from(state.ProductList);
 
                   _sortProductList(displayList);
 
@@ -327,14 +341,17 @@ Widget build(BuildContext context) {
                       );
                     },
                   );
-                }
-              }),
+                  }
+                  return Container();
+                }),
+              )
             ),
           ],
         ),
       ),
     ),
   );
+}
 }
 
 
@@ -354,4 +371,11 @@ Widget _actionButton(String label, IconData icon) {
     ),
   );
 }
-}
+// }
+
+
+/*
+
+                  
+                }
+ */

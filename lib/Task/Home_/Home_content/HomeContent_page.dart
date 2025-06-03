@@ -3,7 +3,7 @@ import 'package:pro2/Task/Category/CategoryProducts/Category_products.dart';
 import 'package:pro2/Task/Category/Controller/Categories_controller.dart';
 import 'package:pro2/Task/Category/Model/Cotegories_Model.dart';
 import 'package:pro2/Task/Home_/DealOfTheDay/DealOfTheDay_page.dart';
-import 'package:pro2/Task/Home_/Home_content/Controller/HomeContent.dart';
+
 import 'package:pro2/Task/Home_/ProductSliders/HomeProductSlider_page.dart';
 import 'package:pro2/Task/Models/Categories.dart';
 import 'package:pro2/Task/Models/PromoBanner_Model.dart';
@@ -22,7 +22,7 @@ class HomeContent_page extends StatefulWidget {
 
 class _HomeContent_pageState extends State<HomeContent_page> {
  
-final HomeContentController homeContentController = Get.put(HomeContentController());
+
 final CategoriesController _categoriesController= Get.put(CategoriesController());
 
   
@@ -131,7 +131,7 @@ final CategoriesController _categoriesController= Get.put(CategoriesController()
                 height: 189,
                 child: PageView.builder(
                   onPageChanged: (val) {
-                    homeContentController.currentPage(val);
+                    // homeContentController.currentPage(val);
                   },
                   itemBuilder: (context, index) => promoBanner(),
                   itemCount: 3,
@@ -151,9 +151,9 @@ final CategoriesController _categoriesController= Get.put(CategoriesController()
                     decoration: BoxDecoration(
                       border: Border.all(color: const Color(0xFFDEDBDB)),
                       borderRadius: BorderRadius.circular(10),
-                      color: homeContentController.currentPage.value == index
-                          ? const Color(0xFFFFA3B3)
-                          : const Color(0xFFDEDBDB),
+                      // color: homeContentController.currentPage.value == index
+                      //     ? const Color(0xFFFFA3B3)
+                      //     : const Color(0xFFDEDBDB),
                     ),
                   ),
                 ),

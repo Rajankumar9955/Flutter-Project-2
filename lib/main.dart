@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:pro2/Getx/Views/product_screen.dart';
 import 'package:pro2/Task/Home_/Home_page.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_bloc.dart';
 import 'package:pro2/Task/LoginSection/Login_Bloc/login_bloc.dart';
 import 'package:pro2/Task/Pages/NavbarSlider_page.dart';
 import 'package:pro2/Task/Intro_Page/Task.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => LoginBloc()),
+        BlocProvider(create: (context) => ProductsBloc()),
       ],
       child: GetMaterialApp(
         title: 'Stylish',

@@ -1,8 +1,9 @@
 
 
 
+import 'package:pro2/Task/Home_/ProductSliders/Api_Services/api_provider.dart';
 import 'package:pro2/Task/Home_/ProductSliders/Model/Product_model.dart';
-import 'package:pro2/Task/Home_/ProductSliders/resources/api_provider.dart';
+
 
 class ApiRepository {
   final ApiProvider _apiProvider=ApiProvider();

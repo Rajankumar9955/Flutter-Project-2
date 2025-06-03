@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:pro2/Task/Category/Model/Cotegories_Model.dart';
-import 'package:pro2/Task/Home_/ProductSliders/Controller/getX_Controller.dart';
 import 'package:pro2/Task/Models/Categories.dart';
 import 'package:pro2/Task/Pages/ProDetails_page.dart';
 import 'package:pro2/Task/WishList_/Controller/Wishlist_Controller.dart';
@@ -22,7 +21,7 @@ class WishList extends StatefulWidget {
 }
 
 class _WishListState extends State<WishList> {
-  final ProductController productController = Get.put(ProductController());
+  // final ProductController productController = Get.put(ProductController());
   final CategoriesController _categoriesController= Get.put(CategoriesController());
   late Razorpay _razorpay;
 
@@ -169,10 +168,10 @@ class _WishListState extends State<WishList> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Text(
-                   '${productController.ProductItems.length}+ Items',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
+                  //  Text(
+                  //  '${productController.ProductItems.length}+ Items',
+                  //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  // ),
                   Row(
                     children: [
                       _actionButton("Sort", Icons.swap_vert),
@@ -228,11 +227,38 @@ class _WishListState extends State<WishList> {
                  }
                ),
 // All produts
-              Obx(() {
-                if (productController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return GridView.builder(
+            
+
+            ],
+          ),
+        ),
+      )),
+    );
+  }
+
+  Widget _actionButton(String label, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          const SizedBox(width: 4),
+          Icon(icon, size: 18),
+        ],
+      ),
+    );
+  }
+
+}
+
+
+
+/*
+ return GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     padding: const EdgeInsets.all(8),
@@ -376,30 +402,4 @@ class _WishListState extends State<WishList> {
                       );
                     },
                   );
-                }
-              }),
-            ],
-          ),
-        ),
-      )),
-    );
-  }
-
-  Widget _actionButton(String label, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-          const SizedBox(width: 4),
-          Icon(icon, size: 18),
-        ],
-      ),
-    );
-  }
-
-}
+ */
