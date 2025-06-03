@@ -25,6 +25,7 @@ class Product {
   String? metaDescription;
   String? metaKeywords;
   String? isFeatured;
+  // String? error; //dhfakdfkabkfbak
   int? status;
   String? createdAt;
   String? updatedAt;
@@ -59,6 +60,7 @@ class Product {
       this.metaKeywords,
       this.isFeatured,
       this.status,
+      // this.error, //dbfakdbkasbdfkasb
       this.createdAt,
       this.updatedAt,
       this.category,
@@ -86,6 +88,7 @@ class Product {
     pattern = json['pattern'];
     sleeve = json['sleeve'];
     fit = json['fit'];
+    // error= json['error']; //gbkbkjbdfasfd
     occassion = json['occassion'];
     metaTitle = json['meta_title'];
     metaDescription = json['meta_description'];
@@ -125,6 +128,7 @@ class Product {
     data['wash_care'] = this.washCare;
     data['keywords'] = this.keywords;
     data['fabric'] = this.fabric;
+    // data['error']= this.error; //dmahdjgfkqbfsd
     data['pattern'] = this.pattern;
     data['sleeve'] = this.sleeve;
     data['fit'] = this.fit;
@@ -281,4 +285,5 @@ class Images {
     data['full_url'] = this.fullUrl;
     return data;
   }
+
 }

@@ -79,12 +79,13 @@ FutureOr<void> getSignUp(SignUpActionEvent event, Emitter<SignUpState> emit) asy
         if(response.statusCode==200){
           emit(SignUpSucessState(message: data['message']));
         } else{
-                emit(SignUpError(message: data['message']));
+              if(response.statusCode!=200){
+                emit(SignUpSucessState(message: data['message']));
+              }
           }
     }catch(e){
       emit(SignUpError(message: e.toString()));
      print(e.toString());
     }
   }
-
  }

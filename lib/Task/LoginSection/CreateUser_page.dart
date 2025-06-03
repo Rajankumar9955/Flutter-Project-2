@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pro2/Task/LoginSection/Controller/Signup_controller.dart';
 import 'package:pro2/Task/LoginSection/Login_Bloc/login_bloc.dart';
 import 'package:pro2/Task/LoginSection/Login_Page.dart';
-import 'package:pro2/Task/LoginSection/services/auth_services.dart';
 import 'package:pro2/Task/Intro_Page/Task.dart';
 import 'package:get/get.dart';
 
