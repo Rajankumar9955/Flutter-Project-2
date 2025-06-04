@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro2/Task/Category/Bloc/category_bloc.dart';
 // import 'package:pro2/Getx/Views/product_screen.dart';
 import 'package:pro2/Task/Home_/Home_page.dart';
 import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_bloc.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => LoginBloc()),
         BlocProvider(create: (context) => ProductsBloc()),
+     
       ],
       child: GetMaterialApp(
         title: 'Stylish',

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro2/Task/Category/Bloc/category_bloc.dart';
+import 'package:pro2/Task/Category/Bloc/category_state.dart';
 import 'package:pro2/Task/Category/CategoryProducts/Category_products.dart';
-import 'package:pro2/Task/Category/Controller/Categories_controller.dart';
+
 import 'package:pro2/Task/Category/Model/Cotegories_Model.dart';
 import 'package:pro2/Task/Home_/DealOfTheDay/DealOfTheDay_page.dart';
 import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_bloc.dart';
 
 import 'package:pro2/Task/Home_/ProductSliders/HomeProductSlider_page.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Model/Product_model.dart';
 import 'package:pro2/Task/Models/Categories.dart';
 import 'package:pro2/Task/Models/PromoBanner_Model.dart';
 import 'package:get/get.dart';
@@ -23,9 +27,6 @@ class _HomeContent_pageState extends State<HomeContent_page> {
   // final CategoriesController _categoriesController = Get.put(
   //   CategoriesController(),
   // );
-
-      final ProductsBloc _productsBloc=ProductsBloc();
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class _HomeContent_pageState extends State<HomeContent_page> {
                   ),
                 ),
                 SizedBox(height: 20),
-
+    
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -73,7 +74,7 @@ class _HomeContent_pageState extends State<HomeContent_page> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
+    
                     Row(
                       children: [
                         _actionButton("Sort", Icons.swap_vert),
@@ -83,59 +84,63 @@ class _HomeContent_pageState extends State<HomeContent_page> {
                     ),
                   ],
                 ),
-                SizedBox(height: 15),
+                 SizedBox(height: 15), 
 
-                Obx(() {
-                  return _categoriesController.isLoading.value
-                      ? Center(child: CircularProgressIndicator())
-                      : SizedBox(
-                        height: 100,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: List.generate(
-                              _categoriesController.Categories.length,
-                              (index) {
-                                CategoriesModel category =
-                                    _categoriesController.Categories[index];
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 16),
-                                  child: Column(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage: NetworkImage(
-                                          ApiNetwork.imgUrl +
-                                              category.categoryImage!,
-                                        ),
-                                        child: InkWell(
-                                          onTap: () {
-                                            Get.to(
-                                              CategoryProducts(
-                                                ID: category.id!,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(height: 6),
-                                      Text(
-                                        category.categoryName.toString(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                }),
+    BlocBuilder<CategoryBloc, CategoryState>(
+         builder: (context, state) {
+                   if (state is CategoryError) {
+                     return const Center(child: Text("Something Went Wrong!"));
+                   } else if (state is CategoryInitial || state is CategoryLoading) {
+                     return const Center(child: CircularProgressIndicator());
+                   } else if (state is CategoryLoaded) {
+                     return SizedBox(
+                       height: 100,
+                       child: SingleChildScrollView(
+                         scrollDirection: Axis.horizontal,
+                         child: Row(
+                           children: List.generate(
+                             state.categoriesList.length,
+                             (index) {
 
+                               Product category = state.categoriesList[index];
+                               
+                               return Padding(
+                                 padding: const EdgeInsets.only(right: 16),
+                                 child: InkWell(
+                                   onTap: () {
+                                     Get.to(CategoryProducts(ID: category.id!));
+                                   },
+                                   child: Column(
+                                     children: [
+                                      //  CircleAvatar(
+                                      //    radius: 30,
+                                      //    backgroundImage: NetworkImage(
+                                      //      ApiNetwork.imgUrl + (category.categoryImage ?? ''),
+                                      //    ),
+                                      //  ),
+                                       const SizedBox(height: 6),
+                                      //  Text(
+                                      //    category.categoryName ?? '',
+                                      //    style: const TextStyle(
+                                      //      fontSize: 14,
+                                      //      color: Colors.black,
+                                      //    ),
+                                      //  ),
+                                     ],
+                                   ),
+                                 ),
+                               );
+                             },
+                           ),
+                         ),
+                       ),
+                     );
+                   }
+                   return Container(); // default fallback
+                 },
+               ),
+
+    
                 //promoBanner
                 SizedBox(
                   height: 189,
@@ -147,30 +152,29 @@ class _HomeContent_pageState extends State<HomeContent_page> {
                     itemCount: 3,
                   ),
                 ),
-
+    
                 SizedBox(height: 9),
-
-                Obx(
-                  () => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      3,
-                      (index) => Container(
-                        height: 11,
-                        width: 11,
-                        margin: const EdgeInsets.only(left: 5),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFFDEDBDB)),
-                          borderRadius: BorderRadius.circular(10),
-                          color: homeContentController.currentPage.value == index
-                              ? const Color(0xFFFFA3B3)
-                              : const Color(0xFFDEDBDB),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
+    
+                // Obx(
+                //   () => Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: List.generate(
+                //       3,
+                //       (index) => Container(
+                //         height: 11,
+                //         width: 11,
+                //         margin: const EdgeInsets.only(left: 5),
+                //         decoration: BoxDecoration(
+                //           border: Border.all(color: const Color(0xFFDEDBDB)),
+                //           borderRadius: BorderRadius.circular(10),
+                //           color: homeContentController.currentPage.value == index
+                //               ? const Color(0xFFFFA3B3)
+                //               : const Color(0xFFDEDBDB),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 SizedBox(height: 9),
                 dealOfTheDayCard(context),
                 SizedBox(height: 20),

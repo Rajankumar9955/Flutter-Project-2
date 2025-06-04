@@ -11,7 +11,7 @@ import 'package:pro2/core/constants/api_network.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import 'package:pro2/Task/Category/CategoryProducts/Category_products.dart';
-import 'package:pro2/Task/Category/Controller/Categories_controller.dart';
+
 
 class WishList extends StatefulWidget {
   const WishList({super.key});
@@ -22,7 +22,7 @@ class WishList extends StatefulWidget {
 
 class _WishListState extends State<WishList> {
   // final ProductController productController = Get.put(ProductController());
-  final CategoriesController _categoriesController= Get.put(CategoriesController());
+  
   late Razorpay _razorpay;
 
   // Replace with your Razorpay Test Key and Secret.
@@ -184,48 +184,48 @@ class _WishListState extends State<WishList> {
               const SizedBox(height: 15),
 
               // Categories horizontal scroll
-            Obx(
-                 () {
-                   return _categoriesController.isLoading.value? Center(child: CircularProgressIndicator()) : SizedBox(
-                          height: 100,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children:
-                                 List.generate(_categoriesController.Categories.length, (index) {
-                                  CategoriesModel category = _categoriesController.Categories[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 16),
-                                      child: Column(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage: NetworkImage(
-                                              ApiNetwork.imgUrl+category.categoryImage!
-                                            ),
-                                            child: InkWell(
-                                              onTap: () {
-                                                 Get.to(CategoryProducts(ID:category.id!,));
-                                              },
-                                            ),
-                                          ),
-                                          SizedBox(height: 6),
-                                          Text(
-                                            category.categoryName.toString(),
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  } ,)
-                            ),
-                          ),
-                        );
-                 }
-               ),
+            // Obx(
+            //      () {
+            //        return _categoriesController.isLoading.value? Center(child: CircularProgressIndicator()) : SizedBox(
+            //               height: 100,
+            //               child: SingleChildScrollView(
+            //                 scrollDirection: Axis.horizontal,
+            //                 child: Row(
+            //                   children:
+            //                      List.generate(_categoriesController.Categories.length, (index) {
+            //                       CategoriesModel category = _categoriesController.Categories[index];
+            //                         return Padding(
+            //                           padding: const EdgeInsets.only(right: 16),
+            //                           child: Column(
+            //                             children: [
+            //                               CircleAvatar(
+            //                                 radius: 30,
+            //                                 backgroundImage: NetworkImage(
+            //                                   ApiNetwork.imgUrl+category.categoryImage!
+            //                                 ),
+            //                                 child: InkWell(
+            //                                   onTap: () {
+            //                                      Get.to(CategoryProducts(ID:category.id!,));
+            //                                   },
+            //                                 ),
+            //                               ),
+            //                               SizedBox(height: 6),
+            //                               Text(
+            //                                 category.categoryName.toString(),
+            //                                 style: TextStyle(
+            //                                   fontSize: 14,
+            //                                   color: Colors.black,
+            //                                 ),
+            //                               ),
+            //                             ],
+            //                           ),
+            //                         );
+            //                       } ,)
+            //                 ),
+            //               ),
+            //             );
+            //      }
+            //    ),
 // All produts
             
 
