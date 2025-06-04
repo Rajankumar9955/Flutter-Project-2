@@ -38,14 +38,14 @@
 //                         color: const Color.fromARGB(255, 3, 3, 2),
 //                         fontFamily: 'Montserrat',
 //                         fontSize: 18,
-                        
+
 //                       ),
 //                     ),
 //                     // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
 //                   ),
 //                   Container(
 //                     //  decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-//                     child: 
+//                     child:
 //                     InkWell (
 //                       onTap: () {
 //                         Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage(),));
@@ -112,9 +112,8 @@
 //                         ),
 //                       ),
 //                     ),
-                    
+
 //                   ),
-                  
 
 //                   InkWell(
 //                     onTap:
@@ -141,9 +140,9 @@
 //                       ),
 //                     ),
 //                   ),
-                  
+
 //                 ],
-                
+
 //               ),
 //               SizedBox(height: 10),
 //             ],
@@ -159,15 +158,23 @@
 //   ];
 // }
 
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pro2/Task/Intro_Page/controller/Intro_Controller.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pro2/Task/Intro_Page/Bloc/pageSlider_bloc.dart';
+import 'package:pro2/Task/Intro_Page/Bloc/pageSlider_state.dart';
+import 'package:pro2/Task/Intro_Page/Bloc/pageslider_event.dart';
 import 'package:pro2/Task/Intro_Page/model/IntroPageModel.dart';
 import 'package:pro2/Task/LoginSection/Login_Page.dart';
 
-class TaskBySir extends StatelessWidget {
-  final controller = Get.put(IntroController());
+class TaskBySir extends StatefulWidget {
+  @override
+  State<TaskBySir> createState() => _TaskBySirState();
+}
+
+class _TaskBySirState extends State<TaskBySir> {
+  final PageController _pageController = PageController();
+
+  final PageSliderBloc _pageSliderBloc = PageSliderBloc(totalIndex: 3);
 
   final List<ProDetailsModel> products = [
     ProDetailsModel(
@@ -192,114 +199,121 @@ class TaskBySir extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(height: 16),
-              Obx(() => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                           RichText(
-                             text: TextSpan(
-                               children: [
-                                 TextSpan(
-                                   text: '${controller.currentPage.value + 1}',
-                                   style: TextStyle(
-                                     fontSize: 18,
-                                     fontWeight: FontWeight.bold,
-                                     color: Colors.black,
-                                   ),
-                                 ),
-                                 TextSpan(
-                                   text: '/',
-                                   style: TextStyle(
-                                     fontSize: 18,
-                                     color: Colors.grey[600],
-                                   ),
-                                 ),
-                                 TextSpan(
-                                   text: '3',
-                                   style: TextStyle(
-                                     fontSize: 18,
-                                     color: Colors.grey,
-                                     fontFamily: 'assets/font/Montserrat-Regular.ttf',
-                                   ),
-                                 ),
-                               ],
-                             ),
-                           ),
-                      InkWell(
-                        onTap: controller.skip,
-                        child: Text(
-                          "Skip",
+    return BlocProvider(
+      create: (_) => PageSliderBloc(totalIndex: products.length),
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: BlocBuilder<PageSliderBloc, PageSliderState>(
+              bloc: _pageSliderBloc,
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${state.currentPage + 1}/${products.length}",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
                             fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ],
-                  )),
-              Expanded(
-                child: PageView.builder(
-                  controller: controller.pageController,
-                  onPageChanged: (value) {
-                    controller.currentPage.value = value;
-                  },
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return CustomSliderWidget(product: products[index]);
-                  },
-                ),
-              ),
-              Obx(() => Row(
-                    children: [
-                      if (controller.currentPage.value > 0)
                         InkWell(
-                            onTap: controller.prevPage, child: Text("Prev")),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            3,
-                            (index) => Container(
-                              margin: EdgeInsets.only(left: 5),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xff17223B33)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: controller.currentPage.value == index
-                                    ? Colors.black
-                                    : Color(0xff17223B33),
-                              ),
-                              height: 12,
-                              width: controller.currentPage.value == index
-                                  ? 30
-                                  : 10,
+                          onTap: () {
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                          },
+                          child: Text(
+                            "Skip",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                    Expanded(
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged:
+                            (index) =>
+                                _pageSliderBloc.add(PageChangedEvent(index)),
+                        itemCount: products.length,
+                        itemBuilder:
+                            (context, index) =>
+                                CustomSliderWidget(product: products[index]),
                       ),
-                      InkWell(
-                        onTap: controller.nextPage,
-                        child: Text(
-                          controller.currentPage.value == 2
-                              ? "Get Started"
-                              : "Next",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                            fontSize: 18,
+                    ),
+                    Row(
+                      children: [
+                        if (state.currentPage > 0)
+                          InkWell(
+                            onTap: () {
+                              _pageController.previousPage(
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeIn,
+                              );
+                              _pageSliderBloc.add(PrevPageEvent());
+                            },
+                            child: Text("Prev"),
+                          ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              products.length,
+                              (index) => Container(
+                                margin: EdgeInsets.only(left: 5),
+                                height: 12,
+                                width: state.currentPage == index ? 30 : 10,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: const Color(0xff17223B33),
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color:
+                                      state.currentPage == index
+                                          ? Colors.black
+                                          : Color(0xff17223B33),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )),
-              SizedBox(height: 10),
-            ],
+                        InkWell(
+                          onTap: () {
+                            print("currentIndex ${state.currentPage}");
+                            if (state.currentPage == products.length - 1) {
+                              // Navigate to next screen
+                            } else {
+                              _pageController.nextPage(
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeIn,
+                              );
+                              _pageSliderBloc.add(NextPageEvent());
+                            }
+                          },
+                          child: Text(
+                            state.currentPage == products.length - 1
+                                ? "Get Started"
+                                : "Next",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -308,8 +322,8 @@ class TaskBySir extends StatelessWidget {
 }
 
 class CustomSliderWidget extends StatelessWidget {
-    final ProDetailsModel product;
-  const CustomSliderWidget({super.key,required this.product});
+  final ProDetailsModel product;
+  const CustomSliderWidget({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -326,7 +340,8 @@ class CustomSliderWidget extends StatelessWidget {
             fontWeight: FontWeight.w800,
           ),
         ),
-        Text(product.Description,
+        Text(
+          product.Description,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: const Color.fromARGB(26, 33, 29, 29),
@@ -335,6 +350,5 @@ class CustomSliderWidget extends StatelessWidget {
         ),
       ],
     );
-    
   }
 }

@@ -3,6 +3,7 @@ import 'package:pro2/Task/Category/CategoryProducts/Category_products.dart';
 import 'package:pro2/Task/Category/Controller/Categories_controller.dart';
 import 'package:pro2/Task/Category/Model/Cotegories_Model.dart';
 import 'package:pro2/Task/Home_/DealOfTheDay/DealOfTheDay_page.dart';
+import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_bloc.dart';
 
 import 'package:pro2/Task/Home_/ProductSliders/HomeProductSlider_page.dart';
 import 'package:pro2/Task/Models/Categories.dart';
@@ -10,8 +11,6 @@ import 'package:pro2/Task/Models/PromoBanner_Model.dart';
 import 'package:get/get.dart';
 
 import 'package:pro2/core/constants/api_network.dart';
-
-
 
 class HomeContent_page extends StatefulWidget {
   const HomeContent_page({super.key});
@@ -21,14 +20,16 @@ class HomeContent_page extends StatefulWidget {
 }
 
 class _HomeContent_pageState extends State<HomeContent_page> {
- 
+  // final CategoriesController _categoriesController = Get.put(
+  //   CategoriesController(),
+  // );
 
-final CategoriesController _categoriesController= Get.put(CategoriesController());
+      final ProductsBloc _productsBloc=ProductsBloc();
 
-  
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold( 
+    return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
@@ -50,7 +51,6 @@ final CategoriesController _categoriesController= Get.put(CategoriesController()
                       SizedBox(width: 10),
                       Expanded(
                         child: TextField(
-                                   
                           decoration: InputDecoration(
                             hintText: "Search any Product..",
                             border: InputBorder.none,
@@ -62,15 +62,18 @@ final CategoriesController _categoriesController= Get.put(CategoriesController()
                   ),
                 ),
                 SizedBox(height: 20),
-            
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "All Featured",
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-            
+
                     Row(
                       children: [
                         _actionButton("Sort", Icons.swap_vert),
@@ -82,105 +85,112 @@ final CategoriesController _categoriesController= Get.put(CategoriesController()
                 ),
                 SizedBox(height: 15),
 
-               Obx(
-                 () {
-                   return _categoriesController.isLoading.value? Center(child: CircularProgressIndicator()) : SizedBox(
-                          height: 100,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children:
-                                 List.generate(_categoriesController.Categories.length, (index) {
-                                  CategoriesModel category = _categoriesController.Categories[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 16),
-                                      child: Column(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage: NetworkImage(
-                                              ApiNetwork.imgUrl+category.categoryImage!
-                                            ),
-                                            child: InkWell(
-                                              onTap: () {
-                                                 Get.to(CategoryProducts(ID:category.id!));
-                                              },
-                                            ),
-                                          ),
-                                          SizedBox(height: 6),
-                                          Text(
-                                            category.categoryName.toString(),
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
+                Obx(() {
+                  return _categoriesController.isLoading.value
+                      ? Center(child: CircularProgressIndicator())
+                      : SizedBox(
+                        height: 100,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: List.generate(
+                              _categoriesController.Categories.length,
+                              (index) {
+                                CategoriesModel category =
+                                    _categoriesController.Categories[index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 16),
+                                  child: Column(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: NetworkImage(
+                                          ApiNetwork.imgUrl +
+                                              category.categoryImage!,
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            Get.to(
+                                              CategoryProducts(
+                                                ID: category.id!,
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    );
-                                  } ,)
+                                      SizedBox(height: 6),
+                                      Text(
+                                        category.categoryName.toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        );
-                 }
-               ),
+                        ),
+                      );
+                }),
 
-               
                 //promoBanner
                 SizedBox(
-                height: 189,
-                child: PageView.builder(
-                  onPageChanged: (val) {
-                    // homeContentController.currentPage(val);
-                  },
-                  itemBuilder: (context, index) => promoBanner(),
-                  itemCount: 3,
+                  height: 189,
+                  child: PageView.builder(
+                    onPageChanged: (val) {
+                      // homeContentController.currentPage(val);
+                    },
+                    itemBuilder: (context, index) => promoBanner(),
+                    itemCount: 3,
+                  ),
                 ),
-              ),
-              
-              SizedBox(height: 9),
-              
-              Obx(() => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  3,
-                  (index) => Container(
-                    height: 11,
-                    width: 11,
-                    margin: const EdgeInsets.only(left: 5),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFFDEDBDB)),
-                      borderRadius: BorderRadius.circular(10),
-                      // color: homeContentController.currentPage.value == index
-                      //     ? const Color(0xFFFFA3B3)
-                      //     : const Color(0xFFDEDBDB),
+
+                SizedBox(height: 9),
+
+                Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      3,
+                      (index) => Container(
+                        height: 11,
+                        width: 11,
+                        margin: const EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFFDEDBDB)),
+                          borderRadius: BorderRadius.circular(10),
+                          color: homeContentController.currentPage.value == index
+                              ? const Color(0xFFFFA3B3)
+                              : const Color(0xFFDEDBDB),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              )),
 
                 SizedBox(height: 9),
                 dealOfTheDayCard(context),
                 SizedBox(height: 20),
                 ProductSlider(),
-                SizedBox(height: 13,),
+                SizedBox(height: 13),
                 SpecialOfferCard(),
-                SizedBox(height: 13,),
+                SizedBox(height: 13),
                 FlatAndHeelsCard(),
-                SizedBox(height: 18,),
+                SizedBox(height: 18),
                 trendingProducts(context),
-                SizedBox(height: 12,),
+                SizedBox(height: 12),
                 ProductSlider(),
-                SizedBox(height: 12,),
+                SizedBox(height: 12),
                 SummerSaleHome(),
-                SizedBox(height:22),
+                SizedBox(height: 22),
                 ShoeAdCard(),
-
               ],
             ),
           ),
-            
-        )
+        ),
       ),
     );
   }
@@ -203,12 +213,12 @@ Widget _actionButton(String label, IconData icon) {
   );
 }
 
-
 class Category {
   final String name;
   final String imagePath;
   Category(this.name, this.imagePath);
 }
+
 class CategoryItem extends StatelessWidget {
   final Category category;
   const CategoryItem(this.category);
@@ -338,7 +348,10 @@ Widget dealOfTheDayCard(BuildContext context) {
             ),
           ),
           onPressed: () {
-             Navigator.push(context, MaterialPageRoute(builder: (context)=>DealOfTheDayProducts()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DealOfTheDayProducts()),
+            );
           },
           child: Row(
             children: [
@@ -353,13 +366,6 @@ Widget dealOfTheDayCard(BuildContext context) {
   );
 }
 
-
-
-
-
-
-
-
 // Special Offers
 
 class SpecialOfferCard extends StatelessWidget {
@@ -373,11 +379,7 @@ class SpecialOfferCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            'assets/offer.png',
-            width: 60,
-            height: 60,
-          ),
+          Image.asset('assets/offer.png', width: 60, height: 60),
           SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,10 +388,7 @@ class SpecialOfferCard extends StatelessWidget {
                 children: [
                   Text(
                     'Special Offers',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   SizedBox(width: 6),
                   Text('😱'),
@@ -398,21 +397,15 @@ class SpecialOfferCard extends StatelessWidget {
               SizedBox(height: 4),
               Text(
                 'We make sure you get the\noffer you need at best prices',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: Colors.black54, fontSize: 13),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 }
-
-
-
 
 class FlatAndHeelsCard extends StatelessWidget {
   @override
@@ -423,9 +416,7 @@ class FlatAndHeelsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 6),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -451,10 +442,7 @@ class FlatAndHeelsCard extends StatelessWidget {
               // Shoe image
               Padding(
                 padding: const EdgeInsets.only(left: 35, top: 30),
-                child: Image.asset(
-                  'assets/sandle.png',
-                  height: 108,
-                ),
+                child: Image.asset('assets/sandle.png', height: 108),
               ),
             ],
           ),
@@ -466,10 +454,7 @@ class FlatAndHeelsCard extends StatelessWidget {
               children: [
                 Text(
                   'Flat and Heels',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Stand a chance to get rewarded',
@@ -505,7 +490,6 @@ class FlatAndHeelsCard extends StatelessWidget {
   }
 }
 
-
 Widget trendingProducts(BuildContext context) {
   return Container(
     // margin: EdgeInsets.symmetric(horizontal: 1),
@@ -532,7 +516,11 @@ Widget trendingProducts(BuildContext context) {
               SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.calendar_month_outlined, color: Colors.white, size: 18),
+                  Icon(
+                    Icons.calendar_month_outlined,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                   SizedBox(width: 6),
                   Text(
                     "Last Day 29/02/22",
@@ -556,7 +544,10 @@ Widget trendingProducts(BuildContext context) {
             ),
           ),
           onPressed: () {
-             Navigator.push(context, MaterialPageRoute(builder: (context)=>DealOfTheDayProducts()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DealOfTheDayProducts()),
+            );
           },
           child: Row(
             children: [
@@ -571,165 +562,161 @@ Widget trendingProducts(BuildContext context) {
   );
 }
 
-
-
 class SummerSaleHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child:
-
- Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'assets/SummerSale.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "New Arrivals",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF000000),
-                      ),
-                    ),
-                    Text(
-                      "Summer’ 25 Collections",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF888888),
-                      ),
-                    ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Handle tap
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFF3366),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: const [
-                        Text(
-                          'View all',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        SizedBox(width: 4),
-                        Icon(Icons.arrow_forward, color: Colors.white, size: 16),
-                      ],
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset('assets/SummerSale.png', fit: BoxFit.cover),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "New Arrivals",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF000000),
                     ),
                   ),
+                  Text(
+                    "Summer’ 25 Collections",
+                    style: TextStyle(fontSize: 16, color: Color(0xFF888888)),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Handle tap
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFF3366),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: const [
+                      Text('View all', style: TextStyle(color: Colors.white)),
+                      SizedBox(width: 4),
+                      Icon(Icons.arrow_forward, color: Colors.white, size: 16),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
 
-
-
-
 class ShoeAdCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return
-       Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Sponserd',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Sponserd',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          SizedBox(height: 8),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Column(
-              children: [
-                Stack(
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                    child: Image.asset(
+                      'assets/sponserd.png',
+                      width: double.infinity,
+                      height: 250,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    left: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        Text(
+                          'UP TO',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                        Text(
+                          '50% OFF',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 4),
+                          height: 2,
+                          width: 80,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                      child: Image.asset(
-                        'assets/sponserd.png',
-                        width: double.infinity,
-                        height: 250,
-                        fit: BoxFit.cover,
+                    Text(
+                      'up to 50% Off',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Positioned(
-                      top: 20,
-                      left: 0,
-                      right: 0,
-                      child: Column(
-                        children: [
-                          Text(
-                            'UP TO',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                          Text(
-                            '50% OFF',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 4),
-                            height: 2,
-                            width: 80,
-                            color: Colors.white,
-                          ),
-                        ],
+                    InkWell(
+                      onTap: () {
+                        print("Tapped Sponsored Button");
+                      },
+                      child: Container(
+                        child: Icon(Icons.arrow_forward_ios, size: 16),
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'up to 50% Off',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          print("Tapped Sponsored Button");
-                        },
-                        child: Container(
-                          child: Icon(Icons.arrow_forward_ios, size: 16,),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 }

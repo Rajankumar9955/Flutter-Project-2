@@ -143,189 +143,186 @@ class _ProductSliderState extends State<ProductSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _productsBloc,
-      child: BlocBuilder(
-        builder: (context, state) {
-          if(state is ProductError){
-            return Center(
-              child: Text(state.error!),
-            );
-          } else if(state is ProductInitial){
-             return Center(
-              child: CircularProgressIndicator(),
-             );
-            }else if(state is ProductLoading){
-             return Center(
-              child: CircularProgressIndicator(),
-             );
-             }else if(state is ProductLoaded){
-               
-               return SizedBox(
-            height: 360,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: state.ProductList.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final product = state.ProductList[index];
-                final price = product.finalPrice ?? 0.0;
-                return InkWell(
-                  onTap: () {
-                    Get.to(ProductsDetailsPage(product: product));
-                  },
-                  child: Container(
-                    width: 250,
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(10),
-                          ),
-                          child:
-                              product.images!.isEmpty || product.images == null
-                                  ? Container(
-                                    child: Center(
-                                      child: Text("Image Not Found!"),
-                                    ),
-                                    color: const Color.fromRGBO(185, 52, 42, 1),
-                                    height: 150,
-                                    width: double.infinity,
-                                  )
-                                  : Image.network(
-                                    product.images![0].fullUrl! +
-                                        "/small/" +
-                                        product.images![0].image!,
-                                    height: 150,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.productName.toString(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-
-                              SizedBox(height: 5),
-                              Text(
-                                product.description.toString(),
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Text(
-                                    '₹${product.productPrice.toString()}',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    '${product.productDiscount} %',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      decoration: TextDecoration.lineThrough,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    '₹ ${product.finalPrice}',
-                                    style: TextStyle(color: Colors.orange),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Row(
-                                    children: List.generate(5, (starIndex) {
-                                      return Icon(
-                                        Icons.star,
-                                        size: 18,
-                                        // color: starIndex < kurta['rating']
-                                        //     ? Colors.amber
-                                        //     : Colors.grey,
-                                      );
-                                    }),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    "5 Star",
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (price <= 0) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              "Invalid product price",
-                                            ),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                        return;
-                                      }
-                                      _openCheckout(
-                                        product.finalPrice!.toDouble(),
-                                        product.productName ?? "Product",
-                                        product.description ?? "",
-                                      );
-                                    },
-                                    child: Text("Buy Now"),
-                                  ),
-
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      print(
-                                        "You Clicked the Add to Cart Button",
-                                      );
-                                    },
-                                    child: Text("Add to Cart"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+    return BlocBuilder(
+      builder: (context, state) {
+        if(state is ProductError){
+          return Center(
+            child: Text(state.error!),
           );
-         };
-       return Container();
-        }
-      ),
+        } else if(state is ProductInitial){
+           return Center(
+            child: CircularProgressIndicator(),
+           );
+          }else if(state is ProductLoading){
+           return Center(
+            child: CircularProgressIndicator(),
+           );
+           }else if(state is ProductLoaded){
+             
+             return SizedBox(
+          height: 360,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: state.ProductList.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              final product = state.ProductList[index];
+              final price = product.finalPrice ?? 0.0;
+              return InkWell(
+                onTap: () {
+                  Get.to(ProductsDetailsPage(product: product));
+                },
+                child: Container(
+                  width: 250,
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(10),
+                        ),
+                        child:
+                            product.images!.isEmpty || product.images == null
+                                ? Container(
+                                  child: Center(
+                                    child: Text("Image Not Found!"),
+                                  ),
+                                  color: const Color.fromRGBO(185, 52, 42, 1),
+                                  height: 150,
+                                  width: double.infinity,
+                                )
+                                : Image.network(
+                                  product.images![0].fullUrl! +
+                                      "/small/" +
+                                      product.images![0].image!,
+                                  height: 150,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.productName.toString(),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+    
+                            SizedBox(height: 5),
+                            Text(
+                              product.description.toString(),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Text(
+                                  '₹${product.productPrice.toString()}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  '${product.productDiscount} %',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    decoration: TextDecoration.lineThrough,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  '₹ ${product.finalPrice}',
+                                  style: TextStyle(color: Colors.orange),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Row(
+                                  children: List.generate(5, (starIndex) {
+                                    return Icon(
+                                      Icons.star,
+                                      size: 18,
+                                      // color: starIndex < kurta['rating']
+                                      //     ? Colors.amber
+                                      //     : Colors.grey,
+                                    );
+                                  }),
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "5 Star",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (price <= 0) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Invalid product price",
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    _openCheckout(
+                                      product.finalPrice!.toDouble(),
+                                      product.productName ?? "Product",
+                                      product.description ?? "",
+                                    );
+                                  },
+                                  child: Text("Buy Now"),
+                                ),
+    
+                                ElevatedButton(
+                                  onPressed: () {
+                                    print(
+                                      "You Clicked the Add to Cart Button",
+                                    );
+                                  },
+                                  child: Text("Add to Cart"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+       };
+     return Container();
+      }
     );
   }
 }

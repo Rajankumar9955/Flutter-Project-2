@@ -565,237 +565,229 @@ final ProductsBloc _productsBloc= ProductsBloc();
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
           child: SingleChildScrollView(
             child: 
-            
-            
-            BlocProvider( 
-              create:(context)=>_productsBloc,
-              child: BlocBuilder(builder: (context, state){
-                if(state is ProductError){
-                  return Center(
-                    child: Text(state.error!),
-                  );
-                }
-                else if(state is ProductInitial){
-                  return Center(
+            BlocBuilder(builder: (context, state){
+              if(state is ProductError){
+                return Center(
+                  child: Text(state.error!),
+                );
+              }
+              else if(state is ProductInitial){
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              else if(state is ProductLoading){
+                return Center(
                     child: CircularProgressIndicator(),
-                  );
-                }
-                else if(state is ProductLoading){
-                  return Center(
-                      child: CircularProgressIndicator(),
-                  );
-                }else if(state is ProductLoaded){
-
-                  // Filter products by category ID
-              List<Product> data = state.ProductList
-              .where((product) => product.categoryId == widget.ID)
-              .toList();
-
-              return  Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Search
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.search, color: Colors.grey),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              hintText: "Search any Product..",
-                              border: InputBorder.none,
-                            ),
+                );
+              }else if(state is ProductLoaded){
+            
+                // Filter products by category ID
+            List<Product> data = state.ProductList
+            .where((product) => product.categoryId == widget.ID)
+            .toList();
+            
+            return  Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Search
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.search, color: Colors.grey),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: "Search any Product..",
+                            border: InputBorder.none,
                           ),
                         ),
-                        const Icon(Icons.mic, color: Colors.grey),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${data.length}+Items',
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
                       ),
-                      Row(
-                        children: [
-                          _actionButton("Sort", Icons.swap_vert),
-                          const SizedBox(width: 10),
-                          _actionButton("Filter", Icons.filter_alt),
-                        ],
-                      ),
+                      const Icon(Icons.mic, color: Colors.grey),
                     ],
                   ),
-                  const SizedBox(height: 15),
-                data.isEmpty
-                 ? Center(
-                     child: Padding(
-                       padding: const EdgeInsets.only(top: 100),
-                       child: Text(
-                         "No products found in this category.",
-                         style: TextStyle(fontSize: 18, color: Colors.grey),
-                       ),
-                     ),
-                   )
-                 : GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(8),
-                    itemCount: data.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 2,
-                      crossAxisSpacing: 0,
-                      mainAxisExtent: 350,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${data.length}+Items',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    itemBuilder: (context, index) {
-                      final product = data[index];
-                      final price = product.finalPrice ?? 0.0;
-
-                      return InkWell(
-                        onTap: () => Get.to(ProductsDetailsPage(product: product)),
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(10),
-                                ),
-                                child: (product.images == null || product.images!.isEmpty)
-                                    ? Container(
-                                        color: const Color.fromRGBO(185, 52, 42, 1),
-                                        height: 120,
-                                        width: double.infinity,
-                                        child: const Center(child: Text("Image Not Found!")),
-                                      )
-                                    : Image.network(
-                                        product.images![0].fullUrl! +
-                                            "/small/" +
-                                            product.images![0].image!,
-                                        height: 120,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.productName ?? "",
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '₹${product.productPrice ?? 0}',
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          '${product.productDiscount ?? 0} %',
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            decoration: TextDecoration.lineThrough,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '₹ $price',
-                                          style: const TextStyle(
-                                            color: Colors.orange,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        Row(
-                                          children: List.generate(5, (index) {
-                                            return const Icon(Icons.star, size: 18, color: Colors.amber);
-                                          }),
-                                        ),
-                                        const SizedBox(width: 3),
-                                        const Text(
-                                          "5.0",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Center(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          if (price <= 0) {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(
-                                                content: Text("Invalid product price"),
-                                                backgroundColor: Colors.red,
-                                              ),
-                                            );
-                                            return;
-                                          }
-                                          _openCheckout(price.toDouble(), product.productName ?? "", product.description ?? "");
-                                        },
-                                        child: const Text("Buy Now"),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                    Row(
+                      children: [
+                        _actionButton("Sort", Icons.swap_vert),
+                        const SizedBox(width: 10),
+                        _actionButton("Filter", Icons.filter_alt),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+              data.isEmpty
+               ? Center(
+                   child: Padding(
+                     padding: const EdgeInsets.only(top: 100),
+                     child: Text(
+                       "No products found in this category.",
+                       style: TextStyle(fontSize: 18, color: Colors.grey),
+                     ),
+                   ),
+                 )
+               : GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(8),
+                  itemCount: data.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 0,
+                    mainAxisExtent: 350,
                   ),
-                ],
-              ); 
-                }
-
-                return Container();
-                
-              }),
-
-             
+                  itemBuilder: (context, index) {
+                    final product = data[index];
+                    final price = product.finalPrice ?? 0.0;
             
-            ),
+                    return InkWell(
+                      onTap: () => Get.to(ProductsDetailsPage(product: product)),
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(10),
+                              ),
+                              child: (product.images == null || product.images!.isEmpty)
+                                  ? Container(
+                                      color: const Color.fromRGBO(185, 52, 42, 1),
+                                      height: 120,
+                                      width: double.infinity,
+                                      child: const Center(child: Text("Image Not Found!")),
+                                    )
+                                  : Image.network(
+                                      product.images![0].fullUrl! +
+                                          "/small/" +
+                                          product.images![0].image!,
+                                      height: 120,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.productName ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '₹${product.productPrice ?? 0}',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        '${product.productDiscount ?? 0} %',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          decoration: TextDecoration.lineThrough,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '₹ $price',
+                                        style: const TextStyle(
+                                          color: Colors.orange,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Row(
+                                        children: List.generate(5, (index) {
+                                          return const Icon(Icons.star, size: 18, color: Colors.amber);
+                                        }),
+                                      ),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "5.0",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Center(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        if (price <= 0) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text("Invalid product price"),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                        _openCheckout(price.toDouble(), product.productName ?? "", product.description ?? "");
+                                      },
+                                      child: const Text("Buy Now"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ); 
+              }
+            
+              return Container();
+              
+            }),
           ),
         ),
       ),
