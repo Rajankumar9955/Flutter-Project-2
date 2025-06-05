@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pro2/Task/Category/Bloc/category_bloc.dart';
-// import 'package:pro2/Getx/Views/product_screen.dart';
-import 'package:pro2/Task/Home_/Home_page.dart';
-import 'package:pro2/Task/Home_/ProductSliders/Bloc/Products_bloc.dart';
-import 'package:pro2/Task/LoginSection/Login_Bloc/login_bloc.dart';
-import 'package:pro2/Task/Pages/NavbarSlider_page.dart';
-import 'package:pro2/Task/Intro_Page/Task.dart';
+import 'package:pro2/Task/App_First_Screen/app_first_screen.dart';
+import 'package:pro2/Task/Home/Bloc/product_bloc.dart';
+import 'package:pro2/Task/User_Auth/Bloc/user_bloc.dart';
+import 'package:pro2/Task/User_Auth/User_Login/user_login.dart';
+import 'package:pro2/Task/Wishlist/Bloc/wishlist_bloc.dart';
 import 'package:pro2/data/session_manager.dart';
 import 'package:get/get.dart';
 
@@ -29,8 +27,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => LoginBloc()),
-        BlocProvider(create: (context) => ProductsBloc()),
-     
+        BlocProvider(create: (context)=>SignUpBloc()),
+        BlocProvider(create: (context)=>ProductBloc()),
+        BlocProvider(create: (context)=>WishProductBloc()),
       ],
       child: GetMaterialApp(
         title: 'Stylish',
@@ -56,7 +55,7 @@ class MyApp extends StatelessWidget {
 
         // home:HomePage(),
         //  home: ProductPage(),
-        home: SessionManager.getToken() != null ? TaskHomePage() : TaskBySir(),
+        home: SessionManager.getToken() != null ? AppFirstScreen() : LoginPage(),
 
         // home: TaskBySir(),
         // home: ProdctScreen(),   //GetX state management

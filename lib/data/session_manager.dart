@@ -1,4 +1,6 @@
-import 'package:pro2/Task/LoginSection/Login_Page.dart';
+
+import 'package:flutter/material.dart';
+import 'package:pro2/Task/User_Auth/User_Login/user_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
@@ -22,5 +24,6 @@ static dynamic  getToken(){
            SharedPreferences? prefs=await _prefs;
                 prefs.clear();
                 Get.offAll(LoginPage());
+                // Navigator.pop(context, MaterialPageRoute(builder: (context)=>LoginPage()));
    }
 }
