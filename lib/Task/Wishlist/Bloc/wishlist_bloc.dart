@@ -17,11 +17,12 @@ class WishProductBloc extends Bloc<WishProductEvent, WishProductState> {
         );
 
         if (response.statusCode == 200) {
-          final jsonData = json.decode(response.body);
-
-          List<ProductModel> productList = List<ProductModel>.from(
-            jsonData.map((item) => ProductModel.fromJson(item)),
-          );
+          var data= jsonDecode(response.body.toString());
+print(data);
+          List<ProductModel> productList = [];
+          data['products'].map((e){
+            productList.add(ProductModel.fromJson(e));
+          }).toList();
 
           emit(WishProductLoaded(productList));
         } else {
