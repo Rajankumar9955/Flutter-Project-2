@@ -18,7 +18,7 @@ class WishProductBloc extends Bloc<WishProductEvent, WishProductState> {
 
         if (response.statusCode == 200) {
           var data= jsonDecode(response.body.toString());
-print(data);
+           print(data);
           List<ProductModel> productList = [];
           data['products'].map((e){
             productList.add(ProductModel.fromJson(e));

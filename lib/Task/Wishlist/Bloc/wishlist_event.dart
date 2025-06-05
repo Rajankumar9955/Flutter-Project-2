@@ -1,3 +1,5 @@
+
+
 import 'package:equatable/equatable.dart';
 
 abstract class WishProductEvent extends Equatable {

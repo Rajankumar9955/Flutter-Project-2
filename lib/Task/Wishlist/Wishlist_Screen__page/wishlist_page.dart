@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:pro2/Task/Category/Bloc/category_bloc.dart';
+import 'package:pro2/Task/Category/Bloc/category_event.dart';
+import 'package:pro2/Task/Category/Bloc/category_state.dart';
+import 'package:pro2/Task/Model/product_model.dart';
 import 'package:pro2/Task/Wishlist/Bloc/wishlist_bloc.dart';
 import 'package:pro2/Task/Wishlist/Bloc/wishlist_event.dart';
 import 'package:pro2/Task/Wishlist/Bloc/wishlist_state.dart';
+import 'package:pro2/core/constants/api_network.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 
@@ -21,6 +26,7 @@ class WishListPage extends StatefulWidget {
 class _WishListState extends State<WishListPage> {
   // final ProductController productController = Get.put(ProductController());
   final WishProductBloc _wishProductBloc=WishProductBloc();
+  final CategoryBloc _categoryBloc=CategoryBloc();
   
   late Razorpay _razorpay;
 
@@ -33,6 +39,7 @@ class _WishListState extends State<WishListPage> {
     super.initState();
 
      _wishProductBloc.add(GetWishProductsEvent());
+     _categoryBloc.add(GetCategoriesEvent());
 
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -186,6 +193,56 @@ class _WishListState extends State<WishListPage> {
               const SizedBox(height: 15),
 
               // Categories horizontal scroll
+            BlocBuilder<CategoryBloc, CategoriesState>(
+  bloc: _categoryBloc,
+  builder: (context, state) {
+    if (state is CategoriesInitial || state is CategoriesLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is CategoriesLoaded) {
+      return SizedBox(
+        height: 100,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(state.CategoriesProducts.length, (index) {
+              ProductModel category = state.CategoriesProducts[index];
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: InkWell(
+                  onTap: () {
+                    // Get.to(CategoryProducts(ID: category.id!));
+                  },
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(
+                          ApiNetwork.imgUrl + category.categoryImage.,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        category.categoryName.toString(),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      );
+    } else if (state is CategoriesError) {
+      return const Center(child: Text("Something Went Wrong!"));
+    }
+    return Container();
+  },
+)
+
             // Obx(
             //      () {
             //        return _categoriesController.isLoading.value? Center(child: CircularProgressIndicator()) : SizedBox(

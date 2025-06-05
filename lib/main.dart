@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pro2/Task/App_First_Screen/app_first_screen.dart';
+import 'package:pro2/Task/Category/Bloc/category_bloc.dart';
 import 'package:pro2/Task/Home/Bloc/product_bloc.dart';
 import 'package:pro2/Task/User_Auth/Bloc/user_bloc.dart';
 import 'package:pro2/Task/User_Auth/User_Login/user_login.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context)=>SignUpBloc()),
         BlocProvider(create: (context)=>ProductBloc()),
         BlocProvider(create: (context)=>WishProductBloc()),
+        BlocProvider(create: (context)=>CategoryBloc()),
       ],
       child: GetMaterialApp(
         title: 'Stylish',
