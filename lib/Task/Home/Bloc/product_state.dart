@@ -13,11 +13,11 @@ class ProductInitial extends ProductState {}
 class ProductLoading extends ProductState {}
 
 class ProductLoaded extends ProductState {
-  final List<ProductModel> products;
-  const ProductLoaded(this.products);
+  final List<ProductModel> productsList;
+  const ProductLoaded(this.productsList);
 
   @override
-  List<Object> get props => [products];
+  List<Object> get props => [productsList];
 }
 
 class ProductError extends ProductState {

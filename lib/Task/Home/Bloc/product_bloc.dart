@@ -17,13 +17,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         );
 
         if (response.statusCode == 200) {
-          final jsonData = json.decode(response.body);
-
-          List<ProductModel> productList = List<ProductModel>.from(
-            jsonData.map((item) => ProductModel.fromJson(item)),
-          );
-
+          final data = jsonDecode(response.body.toString());
+            print(data);
+         
+          List<ProductModel>productList=[];
+          data['products'].map((e){
+            productList.add(ProductModel.fromJson(e));
+          }).toList();
           emit(ProductLoaded(productList));
+
         } else {
           emit(ProductError("Server error: ${response.statusCode}"));
         }

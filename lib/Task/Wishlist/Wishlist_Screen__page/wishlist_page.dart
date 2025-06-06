@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:pro2/Task/Category/Bloc/category_bloc.dart';
 import 'package:pro2/Task/Category/Bloc/category_event.dart';
 import 'package:pro2/Task/Category/Bloc/category_state.dart';
+import 'package:pro2/Task/Category/Category_screen/categories_page.dart';
+import 'package:pro2/Task/Model/category_model.dart';
 import 'package:pro2/Task/Model/product_model.dart';
 import 'package:pro2/Task/Wishlist/Bloc/wishlist_bloc.dart';
 import 'package:pro2/Task/Wishlist/Bloc/wishlist_event.dart';
@@ -194,54 +196,54 @@ class _WishListState extends State<WishListPage> {
 
               // Categories horizontal scroll
             BlocBuilder<CategoryBloc, CategoriesState>(
-  bloc: _categoryBloc,
-  builder: (context, state) {
-    if (state is CategoriesInitial || state is CategoriesLoading) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (state is CategoriesLoaded) {
-      return SizedBox(
-        height: 100,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(state.CategoriesProducts.length, (index) {
-              ProductModel category = state.CategoriesProducts[index];
-              return Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: InkWell(
-                  onTap: () {
-                    // Get.to(CategoryProducts(ID: category.id!));
-                  },
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                          ApiNetwork.imgUrl + category.categoryImage.,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        category.categoryName.toString(),
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          ),
-        ),
-      );
-    } else if (state is CategoriesError) {
-      return const Center(child: Text("Something Went Wrong!"));
-    }
-    return Container();
-  },
-)
+               bloc: _categoryBloc,
+               builder: (context, state) {
+                 if (state is CategoriesInitial || state is CategoriesLoading) {
+                   return const Center(child: CircularProgressIndicator());
+                 } else if (state is CategoriesLoaded) {
+                   return SizedBox(
+                     height: 100,
+                     child: SingleChildScrollView(
+                       scrollDirection: Axis.horizontal,
+                       child: Row(
+                         children: List.generate(state.CategoriesProducts.length, (index) {
+                           CategoriesModel  category= state.CategoriesProducts[index];
+                           return Padding(
+                             padding: const EdgeInsets.only(right: 16),
+                             child: InkWell(
+                               onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryProducts(ID: category.id!)));
+                               },
+                               child: Column(
+                                 children: [
+                                   CircleAvatar(
+                                     radius: 30,
+                                     backgroundImage: NetworkImage(
+                                       ApiNetwork.imgUrl + category.categoryImage!,
+                                     ),
+                                   ),
+                                   const SizedBox(height: 6),
+                                   Text(
+                                     category.categoryName.toString(),
+                                     style: const TextStyle(
+                                       fontSize: 14,
+                                       color: Colors.black,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ),
+                           );
+                         }),
+                       ),
+                     ),
+                   );
+                 } else if (state is CategoriesError) {
+                   return const Center(child: Text("Something Went Wrong!"));
+                 }
+                 return Container();
+               },
+            ),
 
             // Obx(
             //      () {

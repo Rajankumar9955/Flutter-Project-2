@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import 'package:pro2/Task/Home/Bloc/product_bloc.dart';
+import 'package:pro2/Task/Category/Bloc/category_bloc.dart';
+import 'package:pro2/Task/Category/Bloc/category_event.dart';
+import 'package:pro2/Task/Category/Bloc/category_state.dart';
+import 'package:pro2/Task/Category/Category_screen/categories_page.dart';
 import 'package:pro2/Task/Home/Bloc/product_state.dart';
-
+import 'package:pro2/Task/Home/Home_componets/DealOfTheDay/dealoftheday.dart';
+import 'package:pro2/Task/Home/Home_componets/Product_Slider/product_slider.dart';
+import 'package:pro2/Task/Model/category_model.dart';
 import 'package:pro2/core/constants/api_network.dart';
 
 class HomeContent_page extends StatefulWidget {
@@ -14,9 +18,15 @@ class HomeContent_page extends StatefulWidget {
 }
 
 class _HomeContent_pageState extends State<HomeContent_page> {
-  // final CategoriesController _categoriesController = Get.put(
-  //   CategoriesController(),
-  // );
+
+  final CategoryBloc  _categoryBloc=CategoryBloc();
+
+@override
+  void initState() {
+    super.initState();
+    _categoryBloc.add(GetCategoriesEvent());
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,41 +86,81 @@ class _HomeContent_pageState extends State<HomeContent_page> {
                 ),
                  SizedBox(height: 15), 
 
-BlocBuilder<ProductBloc, ProductState>(
-        builder: (context, state) {
-          if (state is ProductLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is ProductError) {
-            return Center(child: Text(state.message));
-          } else if (state is ProductLoaded) {
-            
-            final products = state.products;
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: ListTile(
-                    leading: product.images != null && product.images!.isNotEmpty
-                        ? Image.network(
-                            ApiNetwork.imgUrl + (product.images!.first.fullUrl ?? ''),
-                            width: 60,
-                            fit: BoxFit.cover,
-                          )
-                        : const Icon(Icons.image),
-                    title: Text(product.productName ?? 'No Name'),
-                    subtitle: Text("₹${product.finalPrice ?? product.productPrice ?? 0}"),
-                  ),
-                );
-              },
-            );
-          }
-          return const SizedBox();
-        },
-      ),
+                 // Categories horizontal scroll
+            BlocBuilder<CategoryBloc, CategoriesState>(
+               bloc: _categoryBloc,
+               builder: (context, state) {
+                 if (state is CategoriesInitial || state is CategoriesLoading) {
+                   return const Center(child: CircularProgressIndicator());
+                 } else if (state is CategoriesLoaded) {
+                   return SizedBox(
+                     height: 100,
+                     child: SingleChildScrollView(
+                       scrollDirection: Axis.horizontal,
+                       child: Row(
+                         children: List.generate(state.CategoriesProducts.length, (index) {
+                           CategoriesModel  category= state.CategoriesProducts[index];
+                           return Padding(
+                             padding: const EdgeInsets.only(right: 16),
+                             child: InkWell(
+                               onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryProducts(ID: category.id!)));
+                               },
+                               child: Column(
+                                 children: [
+                                   CircleAvatar(
+                                     radius: 30,
+                                     backgroundImage: NetworkImage(
+                                       ApiNetwork.imgUrl + category.categoryImage!,
+                                     ),
+                                   ),
+                                   const SizedBox(height: 6),
+                                   Text(
+                                     category.categoryName.toString(),
+                                     style: const TextStyle(
+                                       fontSize: 14,
+                                       color: Colors.black,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ),
+                           );
+                         }),
+                       ),
+                     ),
+                   );
+                 } else if (state is CategoriesError) {
+                   return const Center(child: Text("Something Went Wrong!"));
+                 }
+                 return Container();
+               },
+            ),
 
+
+            // final products = state.GetCategoriesEvent;
+            // return ListView.builder(
+            //   padding: const EdgeInsets.all(16),
+            //   itemCount: products.length,
+            //   itemBuilder: (context, index) {
+            //     final product = products[index];
+            //     return Card(
+            //       margin: const EdgeInsets.only(bottom: 16),
+            //       child: ListTile(
+            //         leading: product.images != null && product.images!.isNotEmpty
+            //             ? Image.network(
+            //                 ApiNetwork.imgUrl + (product.images!.first.fullUrl ?? ''),
+            //                 width: 60,
+            //                 fit: BoxFit.cover,
+            //               )
+            //             : const Icon(Icons.image),
+            //         title: Text(product.productName ?? 'No Name'),
+            //         subtitle: Text("₹${product.finalPrice ?? product.productPrice ?? 0}"),
+            //       ),
+            //     );
+            //   },
+            // );
+        
                 //promoBanner
                 SizedBox(
                   height: 189,
@@ -148,7 +198,7 @@ BlocBuilder<ProductBloc, ProductState>(
                 SizedBox(height: 9),
                 dealOfTheDayCard(context),
                 SizedBox(height: 20),
-                // ProductSlider(),
+                ProductSlider(),
                 SizedBox(height: 13),
                 SpecialOfferCard(),
                 SizedBox(height: 13),
@@ -156,7 +206,7 @@ BlocBuilder<ProductBloc, ProductState>(
                 SizedBox(height: 18),
                 trendingProducts(context),
                 SizedBox(height: 12),
-                // ProductSlider(),
+                ProductSlider(),
                 SizedBox(height: 12),
                 SummerSaleHome(),
                 SizedBox(height: 22),
@@ -187,36 +237,36 @@ Widget _actionButton(String label, IconData icon) {
   );
 }
 
-class Category {
-  final String name;
-  final String imagePath;
-  Category(this.name, this.imagePath);
-}
+// class Category {
+//   final String name;
+//   final String imagePath;
+//   Category(this.name, this.imagePath);
+// }
 
-class CategoryItem extends StatelessWidget {
-  final Category category;
-  const CategoryItem(this.category);
+// class CategoryItem extends StatelessWidget {
+//   final Category category;
+//   const CategoryItem(this.category);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: AssetImage(category.imagePath),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            category.name,
-            style: TextStyle(fontSize: 16, color: Colors.black87),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 10),
+//       child: Column(
+//         children: [
+//           CircleAvatar(
+//             radius: 40,
+//             backgroundImage: AssetImage(category.imagePath),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             category.name,
+//             style: TextStyle(fontSize: 16, color: Colors.black87),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 Widget promoBanner() {
   return Container(

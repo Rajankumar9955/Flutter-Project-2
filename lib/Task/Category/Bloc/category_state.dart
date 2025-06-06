@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pro2/Task/Model/category_model.dart';
 import 'package:pro2/Task/Model/product_model.dart';
 
 abstract class CategoriesState extends Equatable {
@@ -6,6 +7,7 @@ abstract class CategoriesState extends Equatable {
 
   @override
   List<Object> get props => [];
+
 }
 
 class CategoriesInitial extends CategoriesState {}
@@ -13,7 +15,8 @@ class CategoriesInitial extends CategoriesState {}
 class CategoriesLoading extends CategoriesState {}
 
 class CategoriesLoaded extends CategoriesState {
-  final List<ProductModel> CategoriesProducts;
+  final List<CategoriesModel> CategoriesProducts;
+  
   const CategoriesLoaded(this.CategoriesProducts);
 
   @override

@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:pro2/Task/Model/product_model.dart';
+import 'package:pro2/Task/Model/category_model.dart';
 import 'category_event.dart';
 import 'category_state.dart';
 
@@ -20,9 +20,9 @@ class CategoryBloc extends Bloc<CategoriesEvent, CategoriesState> {
         if (response.statusCode == 200) {
           var data= jsonDecode(response.body.toString());
            print(data);
-          List<ProductModel> productList = [];
+          List<CategoriesModel> productList = [];
           data['categories'].map((e){
-            productList.add(ProductModel.fromJson(e));
+            productList.add(CategoriesModel.fromJson(e));
           }).toList();
 
           emit(CategoriesLoaded(productList));
